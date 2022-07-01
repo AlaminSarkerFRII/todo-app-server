@@ -23,6 +23,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
       await client.connect();
       console.log("Database connected");
       const todoCollection = client.db("todos").collection("todos-list");
+      const completeCollection = client.db("todos").collection("todocompletes");
 
       app.post("/todos",async(req,res)=>{
         const data= req.body
@@ -33,6 +34,23 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         const result = await todoCollection.find().toArray()
         res.send(result);
       })
+
+      // Complete todoCollection
+
+      // ====Add Complete ToDo======
+		 app.post('/complete', async (req, res) => {
+      const complete = req.body;
+      const result = await completeCollection.insertOne(complete);
+      res.send(result);
+    });
+
+    // ====Get Complete ToDo======
+    app.get('/complete', async (req, res) => {
+      const query = {};
+      const cursor = completeCollection.find(query);
+      const completes = await cursor.toArray();
+      res.send(completes);
+    });
 
 
     } finally {
