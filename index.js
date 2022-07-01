@@ -14,7 +14,7 @@ app.use(express.json());
 
 // mongodb server
 
-const uri = "mongodb+srv://todos-admin:todos-admin@cluster0.jjq0s.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jjq0s.mongodb.net/?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -22,12 +22,26 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
     try {
       await client.connect();
       console.log("Database connected");
+      const todoCollection = client.db("todos").collection("todos-list");
+
+      app.post("/todos",async(req,res)=>{
+        const data= req.body
+        const result = await todoCollection.insertOne(data)
+        res.send(result);
+      })
+      app.get("/todos",async(req,res)=>{
+        const result = await todoCollection.find().toArray()
+        res.send(result);
+      })
+
 
     } finally {
    
     }
   }
   run().catch(console.dir);
+
+
 
 // server
 app.get("/", (req, res) => {
