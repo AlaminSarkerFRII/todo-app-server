@@ -23,7 +23,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
       await client.connect();
       console.log("Database connected");
       const todoCollection = client.db("todos").collection("todos-list");
-      const completeCollection = client.db("todos").collection("todocompletes");
+      // const completeCollection = client.db("todos").collection("todocompletes");
 
       app.post("/todos",async(req,res)=>{
         const data= req.body
@@ -51,12 +51,29 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
     //   res.send(completes);
     // });
 
+    // update
+
     app.put("/todos/:id",async(req,res)=>{
-      // const completed = req.bod.isComplete;
+      // const completed = req.body.isComplete;
       const id = req.params.id;
-      const result = await todoCollection.updateOne({_id:ObjectId(id)},{$set:{isComplete:true}},{upsert:true}).
+      const result = await todoCollection.updateOne({_id:ObjectId(id)},{$set:{isComplete:true}},{upsert:true})
       res.send(result);
     })
+
+    // ======delete=========
+
+    app.delete("/todos/:id",async(req,res)=>{
+      const id = req.params.id;
+      const result = await todoCollection.deleteOne({_id:ObjectId(id)})
+      res.send(result);
+    })
+
+    app.get("/complete-todos",async(req,res)=>{
+      const result = await todoCollection.find({isComplete:true}).toArray()
+      res.send(result);
+    })
+
+
 
 
     } finally {
