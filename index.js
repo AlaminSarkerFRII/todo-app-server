@@ -36,21 +36,27 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
       })
 
       // Complete todoCollection
+    //   // ====Add Complete ToDo======
+		//  app.post('/complete', async (req, res) => {
+    //   const complete = req.body;
+    //   const result = await completeCollection.insertOne(complete);
+    //   res.send(result);
+    // });
 
-      // ====Add Complete ToDo======
-		 app.post('/complete', async (req, res) => {
-      const complete = req.body;
-      const result = await completeCollection.insertOne(complete);
+    // // ====Get Complete ToDo======
+    // app.get('/complete', async (req, res) => {
+    //   const query = {};
+    //   const cursor = completeCollection.find(query);
+    //   const completes = await cursor.toArray();
+    //   res.send(completes);
+    // });
+
+    app.put("/todos/:id",async(req,res)=>{
+      // const completed = req.bod.isComplete;
+      const id = req.params.id;
+      const result = await todoCollection.updateOne({_id:ObjectId(id)},{$set:{isComplete:true}},{upsert:true}).
       res.send(result);
-    });
-
-    // ====Get Complete ToDo======
-    app.get('/complete', async (req, res) => {
-      const query = {};
-      const cursor = completeCollection.find(query);
-      const completes = await cursor.toArray();
-      res.send(completes);
-    });
+    })
 
 
     } finally {
