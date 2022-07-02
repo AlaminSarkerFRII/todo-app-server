@@ -34,8 +34,6 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         const result = await todoCollection.find().toArray()
         res.send(result);
       })
-
-      // Complete todoCollection
     //   // ====Add Complete ToDo======
 		//  app.post('/complete', async (req, res) => {
     //   const complete = req.body;
